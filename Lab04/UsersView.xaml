@@ -1,0 +1,98 @@
+﻿<UserControl x:Class="Lab04.UsersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ff="clr-namespace:FunctionalFun.UI.Behaviours"
+             xmlns:lab04="clr-namespace:Lab04"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="720">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <ScrollViewer>
+            <StackPanel Margin="5">
+                <Label FontWeight="Bold">Age</Label>
+                <DockPanel VerticalAlignment="Center" Margin="10 0 10 10">
+                    <TextBox Text="{Binding ElementName=AgeSlider, Path=LowerValue, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Left" TextAlignment="Left" Width="25" />
+                    <lab04:RangeSlider x:Name="AgeSlider" LowerValue="{Binding MinAgeFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" UpperValue="{Binding MaxAgeFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+                    <TextBox Text="{Binding ElementName=AgeSlider, Path=UpperValue, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" TextAlignment="Right" Width="25" />
+                </DockPanel>
+                <CheckBox Margin="10 0 10 10" IsChecked="{Binding IsBirthdayFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Birthday</CheckBox>
+                <CheckBox Margin="10 0 10 10" IsChecked="{Binding IsAdultFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Adult</CheckBox>
+                <Label FontWeight="Bold">Sun Sign</Label>
+                <ListBox VerticalAlignment="Center"  Margin="10 0 10 10" ItemsSource="{Binding AvailableSunSigns}"
+                         ff:MultiSelectorBehaviours.SynchronizedSelectedItems=
+                         "{Binding SunSignFilter}"
+                         SelectionMode="Multiple"
+                         Background="{x:Null}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding}"
+                                      Margin="3"
+                                      IsChecked="{Binding RelativeSource=
+                           {RelativeSource Mode=FindAncestor,
+                            AncestorType={x:Type ListBoxItem}},
+                           Path=IsSelected}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ListBox>
+                <Label FontWeight="Bold">Chinese Sign</Label>
+                <ListBox VerticalAlignment="Center"  Margin="10 0 10 10" ItemsSource="{Binding AvailableChineseSigns}"
+                         ff:MultiSelectorBehaviours.SynchronizedSelectedItems=
+                         "{Binding ChineseSignFilter}"
+                         SelectionMode="Multiple"
+                         Background="{x:Null}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding}"
+                                      Margin="3"
+                                      IsChecked="{Binding RelativeSource=
+                           {RelativeSource Mode=FindAncestor,
+                            AncestorType={x:Type ListBoxItem}},
+                           Path=IsSelected}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+        </ScrollViewer>
+        <DataGrid Name="UsersDataGrid" ItemsSource="{Binding Users, Mode=TwoWay}" AutoGenerateColumns="False" Grid.Row="0" Grid.Column="1" Margin="1 1 1 0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="First Name" IsReadOnly="False" Binding="{Binding FirstName}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Last Name" IsReadOnly="False" Binding="{Binding LastName}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Birth Date" IsReadOnly="False" Binding="{Binding BirthDateString, NotifyOnTargetUpdated=True}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Email" IsReadOnly="False" Binding="{Binding Email}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Age" Binding="{Binding Age}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Adult" Binding="{Binding IsAdult}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Birthday" Binding="{Binding IsBirthday}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Chinese Sign" Binding="{Binding ChineseSign}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Sun Sign" Binding="{Binding SunSign}"></DataGridTextColumn>
+                <DataGridTemplateColumn Header="Delete Entry">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding DataContext.DeleteRowCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Content="Delete"></Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Grid.Row="1" Content="Add User" Grid.Column="0" Grid.ColumnSpan="2" Command="{Binding ShowInputViewCommand}" Margin="3"></Button>
+    </Grid>
+</UserControl>
